@@ -1,11 +1,15 @@
-import React from "react";
-import { useState } from "react";
+import { type ChangeEvent, type MouseEvent, useState } from "react";
+
+type InputType = {
+  title: string;
+  text: string;
+};
 
 export default function Form(): JSX.Element {
-  //                         собираем данные сразу со всей формы
-  const [inputs, setInputs] = useState({ title: "", text: "" });
-
-  const changeHandler = (e: any) => {
+  //                                        собираем данные сразу со всей формы
+  const [inputs, setInputs] = useState<InputType>({ title: "", text: "" });
+  //                                 принимает джинерики
+  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
     // перед тем как записать какие-то данные по ключу, что мы вводим мы должны ввернуть сначала те данные, которые уже были
     // поэтому здесь разворачиваем и возвращаем то состояние, которое хранилось в inputs
     setInputs((prev: { title: string; text: string }) => ({
@@ -13,8 +17,8 @@ export default function Form(): JSX.Element {
       [e.target.name]: e.target.value,
     }));
   };
-
-  const addHandler = () => {
+  //             передаем по какому элементу будем кликать
+  const addHandler = (e: MouseEvent<HTMLButtonElement>) => {
     // чтобы данные очищались
     // и пишем то состояние, которое мы хотим изначально видеть в inputs
     console.log(inputs);
