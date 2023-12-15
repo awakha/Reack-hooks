@@ -32,6 +32,7 @@ function App(): JSX.Element {
       <button onClick={increment}>+</button>
       <span>{count}</span>
       <button onClick={decrement}>-</button>
+      <hr />
       <Form />
     </>
   );
