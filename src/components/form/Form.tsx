@@ -1,52 +1,63 @@
-import { type ChangeEvent, type MouseEvent, useState } from "react";
+import {
+  type ChangeEvent,
+  type MouseEvent,
+  useState,
+  type Dispatch,
+  SetStateAction,
+} from "react";
 import axios from "axios";
+import type { TodosType } from "../../App";
 
 type InputType = {
   title: string;
   text: string;
 };
 
-export default function Form(): JSX.Element {
-  //                                             собираем данные сразу со всей формы
+type FormPropsType = {
+  setTodos: Dispatch<SetStateAction<TodosType>>;
+};
+
+export default function Form({ setTodos }: FormPropsType): JSX.Element {
   const [inputs, setInputs] = useState<InputType>({ title: "", text: "" });
-  //                                 принимает джинерики
-  const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    // перед тем как записать какие-то данные по ключу, что мы вводим мы должны ввернуть сначала те данные, которые уже были
-    // поэтому здесь разворачиваем и возвращаем то состояние, которое хранилось в inputs
-    setInputs((prev: { title: string; text: string }) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-  //             передаем по какому элементу будем кликать
-  const addHandler = (e: MouseEvent<HTMLButtonElement>) => {
-    // чтобы данные очищались
-    // и пишем то состояние, которое мы хотим изначально видеть в inputs
-    console.log(inputs);
-    axios.post("http://localhost:3100/api", inputs);
-    setInputs({ title: "", text: "" }); //очищвет input
+
+  const chengeHandler = (e: ChangeEvent<HTMLInputElement>) => {
+    // console.log(e.target.name, e.target.value);
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // имя мы дали по названию моделей в БД (title)
-  // мы должны связать value инпутов с состоянием inputs которрое мы храним в хуке useState
-  // для этого длбавляем атрибут value и указываем, что у input изначально будет пустая строка, либо же то, чтомы введем в наши инпуты, после того, как мы вызовем setInputs
+  const addHendler = async (
+    e: MouseEvent<HTMLButtonElement>
+  ): Promise<void> => {
+    console.log(e.target);
+    console.log("inputs", inputs);
+    try {
+      const response = await axios.post("http://localhost:3100/api", inputs);
+      if (response.status === 200) {
+        setTodos((prev) => [...prev, response.data]);
+        setInputs({ title: "", text: "" });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <form>
       <input
-        onChange={changeHandler}
+        onChange={chengeHandler}
         type="text"
         name="title"
         placeholder="title"
         value={inputs.title}
       />
       <input
-        onChange={changeHandler}
+        onChange={chengeHandler}
         type="text"
         name="text"
         placeholder="text"
         value={inputs.text}
       />
-      <button onClick={addHandler} type="button">
+      <button onClick={addHendler} type="button">
         Send
       </button>
     </form>
