@@ -1,4 +1,5 @@
 import { type ChangeEvent, type MouseEvent, useState } from "react";
+import axios from "axios";
 
 type InputType = {
   title: string;
@@ -6,7 +7,7 @@ type InputType = {
 };
 
 export default function Form(): JSX.Element {
-  //                                        собираем данные сразу со всей формы
+  //                                             собираем данные сразу со всей формы
   const [inputs, setInputs] = useState<InputType>({ title: "", text: "" });
   //                                 принимает джинерики
   const changeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +23,7 @@ export default function Form(): JSX.Element {
     // чтобы данные очищались
     // и пишем то состояние, которое мы хотим изначально видеть в inputs
     console.log(inputs);
+    axios.post("http://localhost:3100/api", inputs);
     setInputs({ title: "", text: "" }); //очищвет input
   };
 

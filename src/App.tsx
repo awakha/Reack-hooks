@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from "./components/form/Form";
 // Тип данных,возвращаемый useState является массивом, где
 // - первый аргумент - текущее состояние
@@ -25,6 +25,16 @@ function App(): JSX.Element {
   const decrement = (): void => {
     setCount((prev) => prev - 1);
   };
+  /*
+  useEffect(() => {
+    //Component did mount
+    console.log("useEffect");
+    return () => {
+      console.log("Component will unmount"); // Component will unmount
+    };
+  }, [count]); // Component did mount
+*/
+
   // return отрисовывает UI компоненты,а до return мы описываем основную логику
   return (
     //фрагменты
